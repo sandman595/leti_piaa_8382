@@ -2,6 +2,7 @@
 #include <vector>
 #include <algorithm>
 #include <set>
+#define LINE "<)=================================(>\n"
 
 class Vertex {//vertex class
 
@@ -57,9 +58,12 @@ public:
     }
 };
 
-bool check(std::vector<Path>& vectorPath, std::vector<Vertex>& vectorVertices, char endVertex, bool flagM, bool flagAd)
+bool check(std::vector<Path>& vectorPath, std::vector<Vertex>& vectorVertices, char endVertex)
 {
-    std::cout << "Starting the monotony and validness function check." << std::endl;
+
+    bool flagM = true;
+    bool flagAd = true;
+    std::cout << LINE << "Starting the monotony and validness function check." << std::endl;
     if (abs(endVertex - endVertex) != 0) {
         std::cout << "The heuristic estimate of the target state is not zero!" << std::endl;
         flagM = false;
@@ -127,20 +131,20 @@ bool comp(Vertex a, Vertex b) {//comparator, used for sorting in an open list
 
 void answer(std::vector<Vertex>& vectorVertices, char startVertex, char endVertex)
 {
-    std::cout << "The answer function starts." << std::endl;
+    std::cout << LINE << "The answer function starts." << std::endl;
     std::vector<Vertex> answer;
     answer.reserve(0);
     Vertex temp = vectorVertices[whatNumber(endVertex, vectorVertices)];
-    std::cout << "Writing down the last vertex." << endVertex << std::endl;
+    std::cout << "\tWriting down the last vertex " << endVertex << std::endl;
     answer.emplace_back(temp);
     while (temp.name != startVertex) {
         temp = vectorVertices[whatNumber(temp.nameFromT, vectorVertices)];
-        std::cout << "Writing down the vertex." << temp.name << std::endl;
+        std::cout << "\tWriting down vertex " << temp.name << std::endl;
         answer.emplace_back(temp);
     }
-    std::cout << "Reversing result..." << std::endl;
+    std::cout << "\tReversing result..." << std::endl;
     std::reverse(answer.begin(), answer.end());//since it was filled in the reverse order, we do reverse
-    std::cout << "Answer:  " << std::endl;
+    std::cout << ">>> Answer:\n>>> ";
     for (Vertex ans : answer) {
         std::cout << ans.name;
     }
@@ -149,7 +153,7 @@ void answer(std::vector<Vertex>& vectorVertices, char startVertex, char endVerte
 
 void changeInfo(std::vector<Vertex>& vectorVertices, std::vector<Vertex>& openVertexes, char a, char name, double temp_G, char endVertex )
 {
-    std::cout << "Vertex data update:  " << std::endl;
+    std::cout << LINE << "Vertex data update:  " << std::endl;
 
     vectorVertices[whatNumber(a, vectorVertices)].nameFromT = name;
 
@@ -157,9 +161,9 @@ void changeInfo(std::vector<Vertex>& vectorVertices, std::vector<Vertex>& openVe
     openVertexes[whatNumber(a, openVertexes)].nameFromT = name;
     openVertexes[whatNumber(a, openVertexes)].pathToVertex = temp_G;
     openVertexes[whatNumber(a, openVertexes)].heuristicF = temp_G + abs(endVertex - a);
-    std::cout << "Vertex  " << a << "   is set. Its ancestor:   " << name << std::endl;
-    std::cout << "Path to the  " << a << "   is   " << temp_G << std::endl;
-    std::cout << "Heuristic estimation for a vertex  " << a << "   is   " << temp_G + abs(endVertex - a) << std::endl;
+    std::cout << "\tVertex  " << a << "   is set. Its ancestor:   " << name << std::endl;
+    std::cout << "\tPath to the  " << a << "   is   " << temp_G << std::endl;
+    std::cout << "\tg(x) + h(x) for vertex  " << a << "   is   " << temp_G + abs(endVertex - a) << std::endl;
 }
 
 bool A(std::vector<Path>& vectorPath, std::vector<Vertex>& vectorVertices, char startVertex, char endVertex) {
@@ -171,7 +175,7 @@ bool A(std::vector<Path>& vectorPath, std::vector<Vertex>& vectorVertices, char 
     std::vector<Vertex> openVertexes;
     openVertexes.reserve(0);
 
-    std::cout << "Adding a vertex to the open vertexes vector:   " << vectorVertices[0].name << std::endl;
+    std::cout << "\tAdding a vertex to the open vertices vector:   " << vectorVertices[0].name << std::endl;
 
     openVertexes.emplace_back(vectorVertices[0]);
 
@@ -180,14 +184,14 @@ bool A(std::vector<Path>& vectorPath, std::vector<Vertex>& vectorVertices, char 
         std::cout << "Open vertices sort: " << std::endl;
         std::sort(openVertexes.begin(), openVertexes.end(), comp);
         temp = openVertexes[0]; //minimum f from openVertexes
-        std::cout << "Current vertex:    "<< temp.name << std::endl;
+        std::cout << "\t" << temp.name << " has the maximal priority among others." << std::endl;
 
         if (temp.name == endVertex) {
-            std::cout << "The current vertex is equal to the one you are looking for, so we call the answer function." << std::endl;
+            std::cout << "\tThe current vertex is equal to the one you are looking for, so we call the answer function." << std::endl;
             answer(vectorVertices, startVertex, endVertex);
             return true;
         }
-        std::cout << "Moving " << openVertexes[0].name << " to the vector of closed vertexes." << std::endl;
+        std::cout << "\tMoving " << openVertexes[0].name << " to the vector of closed vertexes." << std::endl;
         closedVertexes.emplace_back(temp); //adding the processed vertex
         openVertexes.erase(openVertexes.begin()); //deleting the processed vertex
 
@@ -198,23 +202,23 @@ bool A(std::vector<Path>& vectorPath, std::vector<Vertex>& vectorVertices, char 
             int j = 0;
             while (true) {
                 if (vectorPath[j].nameFromP == temp.name && vectorPath[j].nameOutP == temp.coupled[i]) {
-                    std::cout << "Evaluating the shortest path to the " << vectorPath[j].nameOutP << std::endl;
+                    std::cout << LINE << "Evaluating the shortest path to the " << vectorPath[j].nameOutP << std::endl;
                     temp_G = vectorPath[j].weightPath + temp.pathToVertex;
-                    std::cout << "It's about " << temp_G << std::endl;
+                    std::cout << ">>> It's about " << temp_G << std::endl;
                     break;
                 }
                 j++;
             }
 
             if (whatNumber(temp.coupled[i], openVertexes) == -1) { //if the neighbor is not in openVertexes
-                std::cout << temp.coupled[i] << " is not in the open vtcs vector, putting it into..." << std::endl;
+                std::cout << "\t" << temp.coupled[i] << " is not in the open vertices vector, putting it into..." << std::endl;
                 openVertexes.emplace_back(vectorVertices[whatNumber(temp.coupled[i], vectorVertices)]); //adding a neighbor
-                std::cout << "Calling the information update function."  << std::endl;
+                std::cout << "\t" << "Updating  vertex info."  << std::endl;
                 changeInfo(vectorVertices, openVertexes, temp.coupled[i], temp.name, temp_G, endVertex);
             }
             else {
                 if (temp_G < openVertexes[whatNumber(temp.coupled[i], openVertexes)].pathToVertex) {
-                    std::cout << "A shorter path up to  "   << temp.coupled[i] <<   " was found (" << temp_G <<").  Update..."<< std::endl;
+                    std::cout << "\t" << "A shorter path to  "   << temp.coupled[i] <<   " was found (" << temp_G <<").  Update..."<< std::endl;
                     changeInfo(vectorVertices, openVertexes, temp.coupled[i], temp.name, temp_G, endVertex);
                 }
             }
@@ -230,8 +234,6 @@ int main() {
 
     setlocale(LC_ALL, "Russian");
     bool flag = true;
-    bool flagM = true;
-    bool flagAd = true;
     std::vector<Path> vectorPath;//vector paths
     vectorPath.reserve(0);
     std::vector<Vertex> vectorVertices;//vector Vertices
@@ -289,17 +291,17 @@ int main() {
 
     vectorVertices[0].pathToVertex = 0;
     vectorVertices[0].heuristicF = abs(endVertex - startVertex);
-    std::cout << "Starting A*!" << std::endl;
+    std::cout << "Starting A*!" << LINE << std::endl;
 
     if (!A(vectorPath, vectorVertices, startVertex, endVertex)) {
         flag = false;
-        std::cout << "Unexpected error!" << std::endl;
+        std::cout << "Unable to find path!" << std::endl;
     }
 
 
     if (flag)
     {
-        check(vectorPath, vectorVertices, endVertex, flagM, flagAd);
+        check(vectorPath, vectorVertices, endVertex);
     }
 
 }
