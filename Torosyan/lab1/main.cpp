@@ -8,7 +8,13 @@
 #else
 #define cls() ;
 #endif // _WIN32
-using namespace std;
+using std::cout;
+using std::cin;
+using std::endl;
+using std::stack;
+using std::pair;
+using std::swap;
+using std::make_pair;
 
 struct Square{
     int x;
@@ -23,9 +29,9 @@ struct Figure {
     stack <Square> squareStack;
 } figure;
 
-stack <pair<int, bool>> availableSquaresStack; // стек на котором хранятся размеры квадратов,которые могут быть вставлены в точку(координаты точки получаются из структуры Figure) и был ли он уже поставлены в фигуру.
+stack <pair<int, bool>> availableSquaresStack; // СЃС‚РµРє РЅР° РєРѕС‚РѕСЂРѕРј С…СЂР°РЅСЏС‚СЃСЏ СЂР°Р·РјРµСЂС‹ РєРІР°РґСЂР°С‚РѕРІ,РєРѕС‚РѕСЂС‹Рµ РјРѕРіСѓС‚ Р±С‹С‚СЊ РІСЃС‚Р°РІР»РµРЅС‹ РІ С‚РѕС‡РєСѓ(РєРѕРѕСЂРґРёРЅР°С‚С‹ С‚РѕС‡РєРё РїРѕР»СѓС‡Р°СЋС‚СЃСЏ РёР· СЃС‚СЂСѓРєС‚СѓСЂС‹ Figure) Рё Р±С‹Р» Р»Рё РѕРЅ СѓР¶Рµ РїРѕСЃС‚Р°РІР»РµРЅС‹ РІ С„РёРіСѓСЂСѓ.
 
-stack <Square> currentSolutions; // стек, в котором хранится текущeе минимальное разбиение фигуры
+stack <Square> currentSolutions; // СЃС‚РµРє, РІ РєРѕС‚РѕСЂРѕРј С…СЂР°РЅРёС‚СЃСЏ С‚РµРєСѓС‰eРµ РјРёРЅРёРјР°Р»СЊРЅРѕРµ СЂР°Р·Р±РёРµРЅРёРµ С„РёРіСѓСЂС‹
 
 void print()
 {
@@ -40,11 +46,11 @@ void print()
 }
 
 
-void maxInsert(int x, int y)// функции передается точка
-{                           // функия ищет размеры всех квадратов, которые
-    int size;		        // можно вставить в точку и при этом не
-                            // этом не перекрыть другие квадраты, которые
-                            //уже стоят в фигуре
+void maxInsert(int x, int y)// С„СѓРЅРєС†РёРё РїРµСЂРµРґР°РµС‚СЃСЏ С‚РѕС‡РєР°
+{                           // С„СѓРЅРєРёСЏ РёС‰РµС‚ СЂР°Р·РјРµСЂС‹ РІСЃРµС… РєРІР°РґСЂР°С‚РѕРІ, РєРѕС‚РѕСЂС‹Рµ
+    int size;		        // РјРѕР¶РЅРѕ РІСЃС‚Р°РІРёС‚СЊ РІ С‚РѕС‡РєСѓ Рё РїСЂРё СЌС‚РѕРј РЅРµ
+                            // СЌС‚РѕРј РЅРµ РїРµСЂРµРєСЂС‹С‚СЊ РґСЂСѓРіРёРµ РєРІР°РґСЂР°С‚С‹, РєРѕС‚РѕСЂС‹Рµ
+                            //СѓР¶Рµ СЃС‚РѕСЏС‚ РІ С„РёРіСѓСЂРµ
     for (size = 1; size <= figure.N - 1; size++)
     {
         if (y + size > figure.N)
@@ -64,7 +70,7 @@ void maxInsert(int x, int y)// функции передается точка
 }
 
 
-void clear(Square a) // функия, которая удаляет квадрат из фигуры
+void clear(Square a) // С„СѓРЅРєРёСЏ, РєРѕС‚РѕСЂР°СЏ СѓРґР°Р»СЏРµС‚ РєРІР°РґСЂР°С‚ РёР· С„РёРіСѓСЂС‹
 {
     figure.summary -= a.size * a.size;
 
@@ -74,7 +80,7 @@ void clear(Square a) // функия, которая удаляет квадрат из фигуры
 }
 
 
-void insert(int x, int y, int size, int color) // функция, которая вставляет квадрат в фигуру
+void insert(int x, int y, int size, int color) // С„СѓРЅРєС†РёСЏ, РєРѕС‚РѕСЂР°СЏ РІСЃС‚Р°РІР»СЏРµС‚ РєРІР°РґСЂР°С‚ РІ С„РёРіСѓСЂСѓ
 {
     figure.summary += size * size;
 
@@ -84,7 +90,7 @@ void insert(int x, int y, int size, int color) // функция, которая вставляет ква
 }
 
 
-pair<int, int> tiling() // функция, которая перебирает все возможные варианты мощения квадрата и ищет среди них минимальное
+pair<int, int> tiling() // С„СѓРЅРєС†РёСЏ, РєРѕС‚РѕСЂР°СЏ РїРµСЂРµР±РёСЂР°РµС‚ РІСЃРµ РІРѕР·РјРѕР¶РЅС‹Рµ РІР°СЂРёР°РЅС‚С‹ РјРѕС‰РµРЅРёСЏ РєРІР°РґСЂР°С‚Р° Рё РёС‰РµС‚ СЃСЂРµРґРё РЅРёС… РјРёРЅРёРјР°Р»СЊРЅРѕРµ
 {
     int x = 0, y = 0;
     int color = 1;
@@ -94,10 +100,10 @@ pair<int, int> tiling() // функция, которая перебирает все возможные варианты мо
 
     maxInsert(x, y);
 
-    do{ // цикл, который работает пока не будут проверенны все комбинации квадратов
+    do{ // С†РёРєР», РєРѕС‚РѕСЂС‹Р№ СЂР°Р±РѕС‚Р°РµС‚ РїРѕРєР° РЅРµ Р±СѓРґСѓС‚ РїСЂРѕРІРµСЂРµРЅРЅС‹ РІСЃРµ РєРѕРјР±РёРЅР°С†РёРё РєРІР°РґСЂР°С‚РѕРІ
         flag = false;
 
-        for (y = 0; y < figure.N; y++) { // циклы, которые ищут первую, пустую клетку и вставляют в нее квадраты
+        for (y = 0; y < figure.N; y++) { // С†РёРєР»С‹, РєРѕС‚РѕСЂС‹Рµ РёС‰СѓС‚ РїРµСЂРІСѓСЋ, РїСѓСЃС‚СѓСЋ РєР»РµС‚РєСѓ Рё РІСЃС‚Р°РІР»СЏСЋС‚ РІ РЅРµРµ РєРІР°РґСЂР°С‚С‹
             for (x = 0; x < figure.M; x++)
             {
                 if (figure.rectangle[y][x] == 0)
@@ -113,19 +119,17 @@ pair<int, int> tiling() // функция, которая перебирает все возможные варианты мо
 
                     color++;
 
-                    //cout << "Insert a new square into the Figure"<< endl;
-                    //print();
-
+                    cout << "\tInserting a new square into the Figure at ( "<< x << ", " << y << " )"<< endl;
                     break;
                 }
             }
             if (flag)
                 break;
         }
-        // если в фигуру вставленно квадратов больше, чем уже в каком-то из известных разбиений, то происходится откат к другим вариантам разбияния
+        // РµСЃР»Рё РІ С„РёРіСѓСЂСѓ РІСЃС‚Р°РІР»РµРЅРЅРѕ РєРІР°РґСЂР°С‚РѕРІ Р±РѕР»СЊС€Рµ, С‡РµРј СѓР¶Рµ РІ РєР°РєРѕРј-С‚Рѕ РёР· РёР·РІРµСЃС‚РЅС‹С… СЂР°Р·Р±РёРµРЅРёР№, С‚Рѕ РїСЂРѕРёСЃС…РѕРґРёС‚СЃСЏ РѕС‚РєР°С‚ Рє РґСЂСѓРіРёРј РІР°СЂРёР°РЅС‚Р°Рј СЂР°Р·Р±РёСЏРЅРёСЏ
         if (  color - 1 == numberSquares && figure.summary != figure.M * figure.N)
         {
-            //cout << "This can be done with less amount of squares. Backtracking...\n";
+            cout << "This can be done with less amount of squares. Backtracking to\n";
             while ( !availableSquaresStack.empty() && availableSquaresStack.top().second)
             {
                 availableSquaresStack.pop();
@@ -134,12 +138,13 @@ pair<int, int> tiling() // функция, которая перебирает все возможные варианты мо
                 color--;
 
             }
-            //print();
+            print();
         }
-        // если фигура была полность покрыта, тогда проверяется минимальное ли это разбиение, если да, то оно запоминается, если разбиение на столько квадратов уже сущетсвует, то счетчик вариантон разбиение увеличивается
+        // РµСЃР»Рё С„РёРіСѓСЂР° Р±С‹Р»Р° РїРѕР»РЅРѕСЃС‚СЊ РїРѕРєСЂС‹С‚Р°, С‚РѕРіРґР° РїСЂРѕРІРµСЂСЏРµС‚СЃСЏ РјРёРЅРёРјР°Р»СЊРЅРѕРµ Р»Рё СЌС‚Рѕ СЂР°Р·Р±РёРµРЅРёРµ, РµСЃР»Рё РґР°, С‚Рѕ РѕРЅРѕ Р·Р°РїРѕРјРёРЅР°РµС‚СЃСЏ, РµСЃР»Рё СЂР°Р·Р±РёРµРЅРёРµ РЅР° СЃС‚РѕР»СЊРєРѕ РєРІР°РґСЂР°С‚РѕРІ СѓР¶Рµ СЃСѓС‰РµС‚СЃРІСѓРµС‚, С‚Рѕ СЃС‡РµС‚С‡РёРє РІР°СЂРёР°РЅС‚РѕРЅ СЂР°Р·Р±РёРµРЅРёРµ СѓРІРµР»РёС‡РёРІР°РµС‚СЃСЏ
         if ( !availableSquaresStack.empty() && figure.summary == figure.M * figure.N)
         {
-            //cout << "The figure is tiled with the number of squares less than or equal to the current split. Saving the alignment of squares and wiping out.\n";
+            cout << "The figure is tiled with the number of squares less than or equal to the current alignment. Looks like this:\n";
+            print();
             if (numberSquares == color - 1)
             {
                 numberColorings++;
@@ -157,7 +162,7 @@ pair<int, int> tiling() // функция, которая перебирает все возможные варианты мо
                 figure.squareStack.pop();
                 color--;
             }
-            //print();
+            cout << "Now saving alignment and wiping out.\n";
 
         }
     }while (!availableSquaresStack.empty());
