@@ -187,7 +187,7 @@ void KMP()
     int lengthPattern = pattern.size();
 
     if(lengthText < lengthPattern) {
-        std::cout << "Text less than pattern!" << std::endl;
+        std::cout << "Text is less than pattern!" << std::endl;
         return;
     }
 #ifdef OUTPUT
@@ -198,11 +198,11 @@ void KMP()
     int lengthSmallPart = lengthText / k;
 
     if(lengthSmallPart < pattern.size()) {
-        std::cout << "Length one part can not less pattern size!" << std::endl;
+        std::cout << "Length of one part can't be less than pattern size!" << std::endl;
         return;
     }
     if(k <= 0) {
-        std::cout << "Count of parts can not equal or less 0!" << std::endl;
+        std::cout << "Parts count must be more than zero!" << std::endl;
         return;
     }
 
