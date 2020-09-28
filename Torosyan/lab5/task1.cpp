@@ -2,7 +2,7 @@
 #include <string>
 #include <vector>
 #include <map>
-
+#include <algorithm>
 
 struct Vertex
 {
@@ -179,6 +179,11 @@ void automatePrint(std::vector <Vertex> vertexArr)
     }
 }
 
+bool comp( const std::pair<int, int>& p1, const std::pair<int, int>& p2 )
+{
+    return (p1.first < p2.first) || ((p1.first == p2.first) && (p1.second < p2.second));
+}
+
 int main() {
     std::cout << "-------------------------------------------------------------------------------------\n";
     std::cout << "Enter text:\n";
@@ -192,6 +197,12 @@ int main() {
 
     readPattern(vertexArr, count, patternArr);
     search(text, vertexArr, res, patternArr);
+    std::sort(res.begin(), res.end(),
+            []( const std::pair<int, int>& p1, const std::pair<int, int>& p2)->bool
+              {
+              return (p1.first < p2.first) || ((p1.first == p2.first) && (p1.second < p2.second));
+              }
+            );
     printRes(res, patternArr, text, textRest);
 
     std::cout << "Rest string from text after cutting patterns from it: " << textRest << "\n";
