@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
-
+#define LINE "\n<)========================================(>\n\n"
 #define OUTPUT
 
 std::vector<int> prefixFunction (std::string s)
@@ -127,7 +127,7 @@ std::vector<int> KMP(const std::string& text, const std::string& pattern, const 
     int lengthText = text.size();
     int lengthPattern = pattern.size();
     while(textIndex < lengthText) {
-#ifdef OUTPUT
+#ifdef EXTRA_OUTPUT
         std::cout << std::endl << "Part: ";
         for(auto ch: text)
             std::cout << ch << " ";
@@ -143,24 +143,26 @@ std::vector<int> KMP(const std::string& text, const std::string& pattern, const 
 #endif
         if(text[textIndex] == pattern[patternIndex]) {
 #ifdef OUTPUT
-            std::cout << "text[" << textIndex << "] == pattern[" << patternIndex << "]" << std::endl;
+            std::cout << "text[" << textIndex << "] == pattern[" << patternIndex << "] :: Continuing, textIndex++; pattern index++" << std::endl;
 #endif
             textIndex++;
             patternIndex++;
             if(patternIndex == lengthPattern) {
                 answer.push_back(textIndex - patternIndex);
 #ifdef OUTPUT
-                std::cout << "Substring found!" << std::endl;
+                std::cout << "! Substring found at text[" << textIndex - patternIndex << "] !" << std::endl;
 #endif
             }
         } else {
 #ifdef OUTPUT
-            std::cout << "text[" << textIndex << "] != pattern[" << patternIndex << "]" << std::endl;
+            std::cout << "text[" << textIndex << "] != pattern[" << patternIndex << "]";
 #endif
             if(patternIndex == 0) {
                 textIndex++;
+                std::cout << " :: Continuing, textIndex++, patternIndex is still 0;\n";
             } else {
                 patternIndex = pi[patternIndex-1];
+                std::cout << " :: Backtracking patternIndex with prefix func: pi[patternIndex-1] ==" << patternIndex <<"\n";
             }
         }
     }
@@ -215,7 +217,9 @@ void KMP()
 
     std::vector<int> occurrences;
     for(int i = 0, indexText = 0; i < parts.size(); i++) {
+        std::cout << "\t\t\t<) Part #" << i+1 << " (>\n\n";
         occurrences = KMP(parts[i], pattern, pi);
+        std::cout << LINE;
         for(int j = 0; j < occurrences.size(); j++) {
             answer.push_back(occurrences[j] + indexText);
         }
